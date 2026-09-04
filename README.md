@@ -1,228 +1,95 @@
-# Вступне слово
-
-
 # Conference Room Booking API
 
-REST API для керування конференц-залами, бронюваннями та додатковими послугами.
+REST API для керування конференц-залами, бронюваннями та розрахунку вартості оренди.
 
-Проєкт реалізований на **ASP.NET Core / .NET 10** з використанням багаторівневої архітектури та Entity Framework Core.
-
-## Features
-
-* Створення конференц-залів
-* Редагування конференц-залів
-* Деактивація конференц-залів
-* Пошук доступних залів за:
-
-  * датою та часом;
-  * необхідною місткістю
-* Створення бронювання
-* Перевірка конфліктів бронювання
-* Додавання додаткових послуг до бронювання
-* Автоматичний розрахунок загальної вартості
-* Керування додатковими послугами
-* Звіти та аналітика:
-
-  * дохід;
-  * завантаженість залів;
-  * популярність додаткових послуг
-* Swagger UI для тестування API
-* Entity Framework Core migrations
-* SQLite database
-* Централізована обробка винятків
-
-## Architecture
-
-Проєкт побудований за принципом розділення відповідальностей:
-
-```text
-ConferenceRoomBooking
-│
-├── src
-│   ├── ConferenceRoomBooking.Api
-│   │   ├── Controllers
-│   │   ├── Middleware
-│   │   └── Extensions
-│   │
-│   ├── ConferenceRoomBooking.Application
-│   │   ├── DTOs
-│   │   ├── Interfaces
-│   │   ├── Services
-│   │   └── Exceptions
-│   │
-│   ├── ConferenceRoomBooking.Domain
-│   │   ├── Entities
-│   │   └── Enums
-│   │
-│   └── ConferenceRoomBooking.Infrastructure
-│       ├── Persistence
-│       ├── Configurations
-│       ├── Repositories
-│       └── Migrations
-│
-└── tests
-    └── ConferenceRoomBooking.Tests
-```
-
-### Layers
-
-**API**
-
-HTTP endpoints, controllers, middleware та конфігурація застосунку.
-
-**Application**
-
-Бізнес-логіка, DTO, application services та інтерфейси репозиторіїв.
-
-**Domain**
-
-Основні сутності
-
-**Infrastructure**
-
-Робота з базою даних, Entity Framework Core, repositories та migrations.
-
-**Tests**
-
-Вимоги на тести не було
-
-
-## Technologies
+## Технології
 
 * .NET 10
 * ASP.NET Core Web API
-* Entity Framework Core 10
+* Entity Framework Core
 * SQLite
 * Swagger / OpenAPI
 * Dependency Injection
-* Git
 
-## Getting Started
+## Реалізований функціонал
 
-### Requirements
+### Конференц-зали
 
-Перед запуском необхідно встановити:
+API підтримує:
 
-* .NET 10 SDK
-* Visual Studio 2026 або інше IDE з підтримкою .NET 10
+* додавання конференц-залу;
+* редагування інформації про зал;
+* видалення залу;
+* пошук доступних залів за датою, часом та необхідною місткістю.
 
-### Clone repository
+Для залу зберігаються:
 
-```bash
-git clone <https://gitlab.com/Zakhar-Khmurych/conferenceroombooking>
-cd ConferenceRoomBooking
-```
+* назва;
+* місткість;
+* базова вартість оренди за годину;
+* доступні додаткові послуги.
 
-### Restore dependencies
+### Бронювання
 
-```bash
-dotnet restore
-```
+API дозволяє:
 
-### Build project
+* створити бронювання;
+* вказати зал, дату, час та тривалість;
+* вибрати додаткові послуги;
+* автоматично розрахувати загальну вартість;
+* перевірити відсутність конфлікту з існуючими бронюваннями.
 
-```bash
-dotnet build
-```
+### Розрахунок вартості
 
-### Run API
+Використовуються правила, наведені в завданні:
 
-```bash
-dotnet run --project src/ConferenceRoomBooking.Api
-```
+| Час         | Коригування вартості |
+| ----------- | -------------------: |
+| 06:00–09:00 |                 -10% |
+| 09:00–18:00 |      базова вартість |
+| 18:00–23:00 |                 -20% |
+| 12:00–14:00 |                 +15% |
 
-Після запуску API буде доступний за адресою, яку покаже консоль застосунку.
+Вартість додаткових послуг додається до вартості оренди.
 
-## Swagger
+Якщо бронювання охоплює декілька часових періодів, вартість розраховується окремо для відповідних інтервалів.
 
-Після запуску API Swagger UI доступний за адресою:
+## Початкові дані
 
-```text
-https://localhost:7269/swagger
-```
+### Конференц-зали
 
-Swagger дозволяє переглядати та тестувати всі доступні API endpoints безпосередньо з браузера.
+| Зал   | Місткість | Вартість за годину |
+| ----- | --------: | -----------------: |
+| Зал A |        50 |           2000 грн |
+| Зал B |       100 |           3500 грн |
+| Зал C |        30 |           1500 грн |
 
-## Database
+### Додаткові послуги
 
-Для зберігання даних використовується SQLite.
+| Послуга  | Вартість |
+| -------- | -------: |
+| Проєктор |  500 грн |
+| Wi-Fi    |  300 грн |
+| Звук     |  700 грн |
 
-Database schema створюється за допомогою Entity Framework Core migrations.
+## API
 
-Database file:
-`conference-room-booking.db`
-
-Для оновлення бази даних:
-
-```bash
-dotnet ef database update \
-  --project src/ConferenceRoomBooking.Infrastructure \
-  --startup-project src/ConferenceRoomBooking.Api
-```
-
-При запуску застосунку також виконується перевірка та ініціалізація початкових даних.
-
-## Initial Data
-
-Система містить початкові конференц-зали:
-
-| Room   | Capacity | Base hourly price |
-| ------ | -------: | ----------------: |
-| Hall A |       50 |          2000 UAH |
-| Hall B |      100 |          3500 UAH |
-| Hall C |       30 |          1500 UAH |
-
-Доступні додаткові послуги:
-
-| Service   |   Price |
-| --------- | ------: |
-| Projector | 500 UAH |
-| Wi-Fi     | 300 UAH |
-| Sound     | 700 UAH |
-
-## Pricing Rules
-
-Вартість бронювання розраховується залежно від часу бронювання.
-
-| Period      |          Price |
-| ----------- | -------------: |
-| 06:00–09:00 |           -10% |
-| 09:00–18:00 | Standard price |
-| 18:00–23:00 |           -20% |
-| 12:00–14:00 |           +15% |
-
-Вартість вибраних додаткових послуг додається до вартості оренди залу.
-
-Для бронювання, яке охоплює декілька часових періодів, вартість розраховується окремо для відповідних інтервалів.
-
-## API Endpoints
-
-### Rooms
+### Конференц-зали
 
 ```text
 POST   /api/rooms
-GET    /api/rooms/{id}
 PUT    /api/rooms/{id}
 DELETE /api/rooms/{id}
 GET    /api/rooms/available
 ```
 
-### Bookings
+### Бронювання
 
 ```text
 POST /api/bookings
-GET  /api/bookings/{id}
 ```
 
-### Services
-
-```text
-POST   /api/services
-PUT    /api/services/{id}
-DELETE /api/services/{id}
-```
-
-### Reports
+### Звіти та аналітика
 
 ```text
 GET /api/reports/revenue
@@ -230,13 +97,17 @@ GET /api/reports/occupancy
 GET /api/reports/services
 ```
 
-Повний опис request/response моделей та параметрів доступний у Swagger UI.
+Звіти призначені для отримання бізнес-інформації щодо:
 
-## Booking Conflict Detection
+* доходу від оренди;
+* завантаженості конференц-залів;
+* популярності додаткових послуг.
 
-Перед створенням бронювання система перевіряє, чи не існує іншого підтвердженого бронювання цього самого залу з перетином часових інтервалів.
+## Перевірка конфліктів бронювання
 
-Бронювання вважаються конфліктними, якщо:
+Перед створенням бронювання перевіряється, чи не перетинається вибраний часовий інтервал з існуючим бронюванням цього самого залу.
+
+Бронювання конфліктують, якщо:
 
 ```text
 existing.StartAt < requested.EndAt
@@ -244,31 +115,90 @@ AND
 existing.EndAt > requested.StartAt
 ```
 
-Це дозволяє, наприклад, створити нове бронювання одразу після завершення попереднього.
+Таким чином, бронювання, яке починається одразу після завершення попереднього, не вважається конфліктним.
 
-## Error Handling
+## Обробка помилок
 
-Помилки обробляються централізовано через middleware.
+Помилки API обробляються централізовано.
 
-Залежно від типу помилки API повертає відповідний HTTP status code, наприклад:
+Основні HTTP-коди:
 
-* `400 Bad Request` для помилок валідації;
-* `404 Not Found`, якщо ресурс не знайдено;
-* `409 Conflict`, якщо зал уже заброньований на вибраний період;
-* `500 Internal Server Error` для неочікуваних помилок.
+* `400 Bad Request` — некоректні вхідні дані;
+* `404 Not Found` — зал або інший необхідний ресурс не знайдено;
+* `409 Conflict` — зал уже заброньований на вибраний період;
+* `500 Internal Server Error` — неочікувана помилка сервера.
 
-## Project Goals
+## Архітектура
 
-Основна мета проєкту:
+Проєкт розділений на окремі рівні відповідальності:
 
-* чисте розділення відповідальностей;
-* підтримуваність коду;
-* можливість подальшого масштабування;
-* тестованість бізнес-логіки;
-* централізована обробка помилок;
-* використання dependency injection;
-* робота з базою даних через Entity Framework Core.
+```text
+ConferenceRoomBooking
+│
+└── src
+    ├── ConferenceRoomBooking.Api
+    ├── ConferenceRoomBooking.Application
+    ├── ConferenceRoomBooking.Domain
+    └── ConferenceRoomBooking.Infrastructure
+```
 
-## License
+### API
 
-This project was created as a technical assignment.
+HTTP endpoints та обробка HTTP-запитів.
+
+### Application
+
+Бізнес-логіка, DTO та інтерфейси.
+
+### Domain
+
+Основні бізнес-сутності та правила предметної області.
+
+### Infrastructure
+
+Робота з базою даних та Entity Framework Core.
+
+## Запуск проєкту
+
+Необхідно встановити .NET 10 SDK.
+
+Клонування репозиторію:
+
+```bash
+git clone <repository-url>
+cd ConferenceRoomBooking
+```
+
+Встановлення залежностей:
+
+```bash
+dotnet restore
+```
+
+Запуск:
+
+```bash
+dotnet run --project src/ConferenceRoomBooking.Api
+```
+
+## Swagger
+
+Після запуску API документація та Swagger UI доступні за адресою:
+
+```text
+https://localhost:<port>/swagger
+```
+
+Swagger використовується для перегляду та тестування API.
+
+## Структура проєкту
+
+```text
+src/
+├── ConferenceRoomBooking.Api/
+├── ConferenceRoomBooking.Application/
+├── ConferenceRoomBooking.Domain/
+└── ConferenceRoomBooking.Infrastructure/
+```
+
+Рішення побудоване з урахуванням принципів Clean Code та розділення відповідальностей, щоб спростити подальше розширення системи.
