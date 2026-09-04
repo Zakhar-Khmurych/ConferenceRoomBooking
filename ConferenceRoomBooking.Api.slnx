@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ConferenceRoomBooking.Api/ConferenceRoomBooking.Api.csproj" />
+  <Project Path="ConferenceRoomBooking.Application/ConferenceRoomBooking.Application.csproj" />
+  <Project Path="ConferenceRoomBooking.Domain/ConferenceRoomBooking.Domain.csproj" />
+  <Project Path="ConferenceRoomBooking.Infrastructure/ConferenceRoomBooking.Infrastructure.csproj" />
+</Solution>

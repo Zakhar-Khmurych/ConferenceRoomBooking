@@ -1,0 +1,10 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ConferenceRoomBooking.Application.DTOs.Rooms;
+
+public sealed record CreateRoomRequest(
+    string Name,
+    int Capacity,
+    decimal BaseHourlyPrice,
+    IReadOnlyCollection<Guid> ServiceIds);

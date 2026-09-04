@@ -1,0 +1,34 @@
+﻿using ConferenceRoomBooking.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace ConferenceRoomBooking.Infrastructure.Persistence.Configurations;
+
+public sealed class BookingServiceConfiguration
+    : IEntityTypeConfiguration<BookingService>
+{
+    public void Configure(EntityTypeBuilder<BookingService> builder)
+    {
+        builder.ToTable("BookingServices");
+
+        builder.HasKey(x => new
+        {
+            x.BookingId,
+            x.ServiceId
+        });
+
+        builder.Property(x => x.Price)
+            .HasPrecision(18, 2)
+            .IsRequired();
+
+        builder.HasOne<Booking>()
+            .WithMany()
+            .HasForeignKey(x => x.BookingId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne<Service>()
+            .WithMany()
+            .HasForeignKey(x => x.ServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+}
