@@ -109,7 +109,7 @@ HTTP endpoints, controllers, middleware та конфігурація засто
 ### Clone repository
 
 ```bash
-git clone <repository-url>
+git clone <https://gitlab.com/Zakhar-Khmurych/conferenceroombooking>
 cd ConferenceRoomBooking
 ```
 
@@ -123,12 +123,6 @@ dotnet restore
 
 ```bash
 dotnet build
-```
-
-### Run tests
-
-```bash
-dotnet test
 ```
 
 ### Run API
