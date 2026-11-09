@@ -61,6 +61,7 @@ await InitializeDatabaseAsync(app);
 
 app.Run();
 
+
 static async Task InitializeDatabaseAsync(
     WebApplication app)
 {
@@ -71,3 +72,5 @@ static async Task InitializeDatabaseAsync(
 
     await DbInitializer.InitializeAsync(db);
 }
+
+public partial class Program { }
