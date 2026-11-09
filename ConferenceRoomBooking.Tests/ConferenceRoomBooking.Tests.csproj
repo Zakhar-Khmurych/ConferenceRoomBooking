@@ -24,4 +24,8 @@
 		<ProjectReference Include="..\ConferenceRoomBooking.Api\ConferenceRoomBooking.Api.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Manual Reports\" />
+	</ItemGroup>
+
 </Project>
