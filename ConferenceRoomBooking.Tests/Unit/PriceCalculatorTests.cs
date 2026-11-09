@@ -54,4 +54,26 @@ public sealed class PriceCalculatorTests
         
         Assert.Throws<ArgumentException>(action);
     }
+
+    [Fact]
+    public void CalculateRoomPrice_WhenBookingCrossesPeakHour_UsesBothRates()
+    {
+        var start = new DateTime(2026, 11, 10, 11, 30, 0);
+        var end = new DateTime(2026, 11, 10, 12, 30, 0);
+
+        var result = _calculator.CalculateRoomPrice(2000m,start,end);
+
+        Assert.Equal(2150m, result);
+    }
+
+    [Fact]
+    public void CalculateRoomPrice_WhenBookingEndsAt23_ReturnsEveningPrice()
+    {
+        var start = new DateTime(2026, 11, 10, 22, 0, 0);
+        var end = new DateTime(2026, 11, 10, 23, 0, 0);
+
+        var result = _calculator.CalculateRoomPrice(2000m,start,end);
+
+        Assert.Equal(1600m, result);
+    }
 }
