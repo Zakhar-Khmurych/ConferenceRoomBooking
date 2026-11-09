@@ -6,4 +6,5 @@
   <Project Path="ConferenceRoomBooking.Application/ConferenceRoomBooking.Application.csproj" />
   <Project Path="ConferenceRoomBooking.Domain/ConferenceRoomBooking.Domain.csproj" />
   <Project Path="ConferenceRoomBooking.Infrastructure/ConferenceRoomBooking.Infrastructure.csproj" />
+  <Project Path="ConferenceRoomBooking.Tests/ConferenceRoomBooking.Tests.csproj" Id="1d043297-6c9e-44e5-9c49-25cb2e9b129c" />
 </Solution>
